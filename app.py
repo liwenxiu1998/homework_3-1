@@ -138,7 +138,12 @@ app.layout = html.Div([
     # Div to hold the initial instructions and the updated info once submit is pressed
     html.Div(id='currency-output', children='Enter a currency code and press submit'),
     # Div to hold the candlestick graph
-    html.Div([dcc.Graph(id='candlestick-graph')]),
+
+    dcc.Loading(
+        id="loading",
+        type="circle",
+        children=html.Div([dcc.Graph(id='candlestick-graph')])
+    ),
     # Another line break
     html.Br(),
     # Section title
@@ -221,6 +226,22 @@ def update_candlestick_graph(n_clicks, currency_string, what_to_show,
     # Some default values are provided below to help with your testing.
     # Don't forget -- you'll need to update the signature in this callback
     #   function to include your new vars!
+    contract_details = fetch_contract_details(contract)
+
+    if type(contract_details) == str:
+        message = f"Input error: {contract_details}! Check your input!"
+        # if wrong input, return blank figure
+        return message, go.Figure()
+
+    else:
+        s = str(contract_details).split(",")[10]
+        if  s== currency_string:
+            message = 'Submitted query for ' + currency_string
+        else:
+            message = f"Extraction symbol: {s} is not aligned with input {currency_string}."
+            # if wrong input, return blank figure
+            return message, go.Figure()
+
     cph = fetch_historical_data(
         contract=contract,
         endDateTime=endDateTime,
@@ -248,7 +269,7 @@ def update_candlestick_graph(n_clicks, currency_string, what_to_show,
 
 
     # Return your updated text to currency-output, and the figure to candlestick-graph outputs
-    return ('Submitted query for ' + currency_string), fig
+    return message, fig
 
 # Callback for what to do when trade-button is pressed
 @app.callback(
