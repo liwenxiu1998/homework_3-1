@@ -1,0 +1,3 @@
+,order_id,client_id,perm_id,con_id,symbol,action,size,order_type,trade_limit,avg_fill_price,timestamp
+0,0,10645,187918564.0,0,EUR,BUY,10000,MKT,-,1.10885,2022-03-29 16:26:31
+1,0,10645,187918565.0,0,EUR,BUY,10000,LMT,100,1.10885,2022-03-29 16:26:50
